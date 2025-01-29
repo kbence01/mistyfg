@@ -37,7 +37,8 @@ public abstract class ExtractRangeMap extends JarExec {
         }
 
         // no fucking idea why it wants to use java 11 so just set it to 17
-        getSourceCompatibility().convention("17");
+        // now to 21 :)
+        getSourceCompatibility().convention("21");
     }
 
     @Override

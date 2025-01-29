@@ -16,8 +16,8 @@ import java.util.List;
 
 public abstract class ApplyBinPatches extends JarExec {
     public ApplyBinPatches() {
-        getTool().set(Utils.BINPATCHER);
-        getArgs().addAll("--clean", "{clean}", "--output", "{output}", "--apply", "{patch}");
+        getTool().set(Utils.BINPATCHER);                                                               /// added --data and --unpatched
+        getArgs().addAll("--clean", "{clean}", "--output", "{output}", "--apply", "{patch}", "--data", "--unpatched");
 
         getOutput().convention(getProject().getLayout().getBuildDirectory().dir(getName()).map(d -> d.file("output.jar")));
     }

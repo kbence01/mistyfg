@@ -70,6 +70,7 @@ class ExecuteFunction implements MCPFunction {
     @Override
     public File execute(MCPEnvironment environment) throws IOException, InterruptedException, ExecutionException {
         // Add an output and log argument if there wasn't one
+        System.out.println("[DEBUG] EXECUTE FUNCTION START");
         Map<String, Object> arguments = environment.getArguments();
         String outputExtension = (String)arguments.getOrDefault("outputExtension", "jar");
         arguments.computeIfAbsent("output", k -> environment.getFile("output." + outputExtension));
@@ -77,6 +78,8 @@ class ExecuteFunction implements MCPFunction {
 
         // Get input and output files
         File output = (File)environment.getArguments().get("output");
+        System.out.println("[DEBUG] " + output.getAbsolutePath());
+        System.out.println("asd");
 
         // Find out what the inputs are
         Map<String, Object> replacedArgs = new HashMap<>();
@@ -122,7 +125,9 @@ class ExecuteFunction implements MCPFunction {
                 .getAsFile()
                 .getAbsolutePath();
 
-        System.out.println(launcher);
+        System.out.println("TOOLCHAIN VERSION " + toolchainVersion.toString());
+
+        System.out.println("EXECUTE START");
 
         // Execute command
         try (BufferedOutputStream log_out = new BufferedOutputStream(new FileOutputStream(environment.getFile("console.log")))) {

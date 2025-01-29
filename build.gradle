@@ -110,7 +110,17 @@ gradlePlugin {
 publishing {
     publications {
         pluginMaven(MavenPublication) {
-            // Automated publishing declares the java component for us
+        }
+    }
+
+    repositories {
+        maven {
+            name = "nexus"
+            url = uri("https://nexus.mistymc.net/repository/maven-releases/")
+            credentials {
+                username = 'admin'
+                password = '2aee098d-e79f-4288-ab34-8e8bb44600ef'
+            }
         }
     }
 }

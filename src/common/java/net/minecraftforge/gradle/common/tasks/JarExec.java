@@ -123,13 +123,13 @@ public abstract class JarExec extends DefaultTask {
                 spec.setWorkingDir(workingDirectory);
                 spec.getMainClass().set(mainClass);
 
-                log.println("Java Launcher: " + spec.getExecutable());
-                log.println("Arguments: " + args.stream().collect(Collectors.joining(", ", "'", "'")));
-                log.println("Classpath:");
-                classpath.forEach(f -> log.println(" - " + f.getAbsolutePath()));
-                log.println("Working directory: " + workingDirectory.getAbsolutePath());
-                log.println("Main class: " + mainClass);
-                log.println("====================================");
+                System.out.println("Java Launcher: " + spec.getExecutable());
+                System.out.println("Arguments: " + args.stream().collect(Collectors.joining(", ", "'", "'")));
+                System.out.println("Classpath:");
+                classpath.forEach(f -> System.out.println(" - " + f.getAbsolutePath()));
+                System.out.println("Working directory: " + workingDirectory.getAbsolutePath());
+                System.out.println("Main class: " + mainClass);
+                System.out.println("====================================");
 
                 spec.setStandardOutput(new OutputStream() {
                     @Override

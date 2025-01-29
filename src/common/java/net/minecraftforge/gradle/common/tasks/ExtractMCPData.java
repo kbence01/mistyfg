@@ -63,6 +63,8 @@ public abstract class ExtractMCPData extends DefaultTask {
             }
         }
 
+        System.out.println("EXTRACT SRG SRC " + output.getAbsolutePath());
+
         if (cfg.isOfficial() && output.exists() && "mappings".equals(key)) {
             IMappingFile obfToSrg = IMappingFile.load(output);
             remapSrgClasses(getProject(), cfg, obfToSrg).write(output.toPath(), IMappingFile.Format.TSRG2, false);
@@ -73,11 +75,13 @@ public abstract class ExtractMCPData extends DefaultTask {
         String minecraftVersion = MinecraftRepo.getMCVersion(config.getVersion());
         File client = MavenArtifactDownloader.generate(project, "net.minecraft:client:" + minecraftVersion + ":mappings@txt", true);
 
+        System.out.println(" client " + client.getAbsolutePath());
         IMappingFile obfToOfficial = IMappingFile.load(client).reverse();
 
         return obfToSrg.rename(new IRenamer() {
             @Override
             public String rename(IMappingFile.IClass value) {
+                System.out.println(value.getOriginal() + " -> " + obfToOfficial.remapClass(value.getOriginal()));
                 return obfToOfficial.remapClass(value.getOriginal());
             }
         });

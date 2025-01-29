@@ -34,15 +34,7 @@ import net.minecraftforge.gradle.mcp.tasks.DownloadMCPConfig;
 import net.minecraftforge.gradle.mcp.tasks.DownloadMCPMappings;
 import net.minecraftforge.gradle.mcp.tasks.GenerateSRG;
 import net.minecraftforge.gradle.mcp.tasks.SetupMCP;
-import net.minecraftforge.gradle.patcher.tasks.ApplyPatches;
-import net.minecraftforge.gradle.patcher.tasks.BakePatches;
-import net.minecraftforge.gradle.patcher.tasks.CreateExc;
-import net.minecraftforge.gradle.patcher.tasks.CreateFakeSASPatches;
-import net.minecraftforge.gradle.patcher.tasks.FilterNewJar;
-import net.minecraftforge.gradle.patcher.tasks.GenerateBinPatches;
-import net.minecraftforge.gradle.patcher.tasks.GeneratePatches;
-import net.minecraftforge.gradle.patcher.tasks.GenerateUserdevConfig;
-import net.minecraftforge.gradle.patcher.tasks.ReobfuscateJar;
+import net.minecraftforge.gradle.patcher.tasks.*;
 
 import org.gradle.api.DefaultTask;
 import org.gradle.api.NamedDomainObjectProvider;
@@ -84,6 +76,7 @@ public class PatcherPlugin implements Plugin<Project> {
         EnvironmentChecks.checkEnvironment(project);
 
         final PatcherExtension extension = project.getExtensions().create(PatcherExtension.class, PatcherExtension.EXTENSION_NAME, PatcherExtension.class, project);
+        final ModsExtension modsExtension = project.getExtensions().create(ModsExtension.class, ModsExtension.EXTENSION_NAME, ModsExtension.class, project);
         project.getExtensions().create(ChannelProvidersExtension.EXTENSION_NAME, ChannelProvidersExtension.class);
         project.getExtensions().create(LegacyExtension.EXTENSION_NAME, LegacyExtension.class);
         project.getPluginManager().apply(JavaPlugin.class);
@@ -124,6 +117,7 @@ public class PatcherPlugin implements Plugin<Project> {
         final TaskProvider<Jar> sourcesJar = tasks.register("sourcesJar", Jar.class);
         final TaskProvider<Jar> universalJar = tasks.register("universalJar", Jar.class);
         final TaskProvider<Jar> userdevJar = tasks.register("userdevJar", Jar.class);
+        final TaskProvider<RemapModJarTask> remapModsJar = tasks.register("remapModsJar", RemapModJarTask.class);
         final TaskProvider<GenerateUserdevConfig> userdevConfig = tasks.register("userdevConfig", GenerateUserdevConfig.class, project);
         final TaskProvider<DefaultTask> release = tasks.register("release", DefaultTask.class);
 
@@ -144,6 +138,11 @@ public class PatcherPlugin implements Plugin<Project> {
         project.getRepositories().maven(e -> {
             e.setUrl(Utils.MOJANG_MAVEN);
             e.metadataSources(MetadataSources::artifact);
+        });
+
+        remapModsJar.configure(task -> {
+            task.project(project);
+            task.mods(modsExtension.getMods());
         });
 
         release.configure(task -> task.dependsOn(sourcesJar, universalJar, userdevJar));

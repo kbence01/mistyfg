@@ -42,11 +42,15 @@ public abstract class GenerateSRG extends DefaultTask {
         if (names == null)
             throw new IllegalStateException("Invalid mappings: " + getMappings() + " Could not find archive");
 
+        System.out.println("NAMES: " + names.getAbsolutePath());
+        System.out.println("SRG INPUT: " + getSrg().get().getAsFile().getAbsolutePath());
+
         IMappingFile input = IMappingFile.load(getSrg().get().getAsFile());
         if (!notch)
             input = input.reverse().chain(input); // Reverse makes SRG->OBF, chain makes SRG->SRG
 
         McpNames map = McpNames.load(names);
+        System.out.println("McpNames renaming started");
         IMappingFile ret = input.rename(new IRenamer() {
             @Override
             public String rename(IField value) {
